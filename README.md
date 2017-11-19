@@ -1,3 +1,11 @@
+# Bitcoin price predict
+
+For previous version, please see [v-1.0](https://github.com/ysmiles/BitcoinPricePredict/tree/v-1.0).
+
+## Current task
+
+1. Encapsulate a transmitter. Instead of  
+
 ## 1. Introduction
 
 ### 1.1 Time-series 
