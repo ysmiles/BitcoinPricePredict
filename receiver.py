@@ -57,3 +57,5 @@ plt.legend(loc="upper left")
 plt.xlabel("Cycles")
 plt.ylabel("Memory usage")
 plt.savefig("img/mem.svg")
+
+plt.show()

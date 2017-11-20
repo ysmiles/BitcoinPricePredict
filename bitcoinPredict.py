@@ -1,13 +1,11 @@
 # Import Libraries
-import os
-import shutil
 import pandas as pd
 import numpy as np
+import os
 import matplotlib
 import matplotlib.pyplot as plt
 import random
-
-# TensorFlow
+import shutil
 import tensorflow as tf
 import tensorflow.contrib.learn as tflearn
 import tensorflow.contrib.layers as tflayers
