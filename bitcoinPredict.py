@@ -1,11 +1,13 @@
 # Import Libraries
+import os
+import shutil
 import pandas as pd
 import numpy as np
-import os
 import matplotlib
 import matplotlib.pyplot as plt
 import random
-import shutil
+
+# TensorFlow
 import tensorflow as tf
 import tensorflow.contrib.learn as tflearn
 import tensorflow.contrib.layers as tflayers
@@ -13,23 +15,21 @@ from tensorflow.contrib.learn.python.learn import learn_runner
 import tensorflow.contrib.metrics as metrics
 import tensorflow.contrib.rnn as rnn
 
-import csv
-from datafetch import getBCdata
+# Transmitter
+from transmitter import getBCdata
 import psutil
+
+# MongoDB
+from pymongo import MongoClient
 
 
 startdate = '2017-01-01'
-enddate = '2017-10-20'
+enddate = '2017-11-18'
 
 rng = pd.date_range(start=startdate, end=enddate, freq='D')
 ts = getBCdata(startdate, enddate)
 # ts = pd.Series([v for (k, v) in ts.items()])
 TS = np.array([v for (k, v) in ts.items()])
-
-# with open('Bitcoin2017.csv', 'w') as csv_file:
-#     writer = csv.writer(csv_file)
-#     for key, value in ts.items():
-#        writer.writerow([key, value])
 
 num_periods = 20
 f_horizon = 1  # forecast horizon, one period into the future
@@ -62,7 +62,7 @@ print('Test shape', X_test.shape)
 tf.reset_default_graph()
 
 # setted before
-# num_periods = 20      #number of periods per vector we are using to predict one period ahead
+# num_periods = 20 # number of periods per vector we are using to predict one period ahead
 inputs = 1  # number of vectors submitted
 hidden = 500  # number of neurons we will recursively work through, can be changed to improve accuracy
 output = 1  # number of output vectors
@@ -139,40 +139,43 @@ with tf.Session() as sess:
 
 epochs = np.arange(epochs)
 
-# Result
-plt.figure()
-plt.title("Predicted vs Actual", fontsize=14)
-plt.plot(pd.Series(np.ravel(Y_test)), "bo", markersize=10, label="Actual")
-# plt.plot(pd.Series(np.ravel(Y_test)), "w.", markersize=10)
-plt.plot(pd.Series(np.ravel(y_pred)), "r*", markersize=10, label="Forecast")
-plt.legend(loc="upper left")
-plt.xlabel("Bitcoin prices of recent days")
-plt.ylabel("Dollars")
-plt.axis([-1, 21, 4000, 6200])
-plt.savefig("img/result.svg")
+# Prepare to save data
+print("prepare to save data")
 
-plt.figure()
-plt.title("MSE vs Training Cycles", fontsize=14)
-plt.plot(epochs, mses)
-plt.legend(loc="upper left")
-plt.xlabel("Cycles")
-plt.ylabel("Mean square error")
-plt.savefig("img/loss.svg")
+# database client
+client = MongoClient()
 
-plt.figure()
-plt.title("CPU usage vs Training Cycles", fontsize=14)
-plt.plot(epochs, cpus)
-plt.legend(loc="upper left")
-plt.xlabel("Cycles")
-plt.ylabel("CPU usage")
-plt.savefig("img/cpu.svg")
+# will saved processed data into this database collection
+collection = client.bitcoin_predict.parameters
 
-plt.figure()
-plt.title("Memory usage vs Training Cycles", fontsize=14)
-plt.plot(epochs, mems)
-plt.legend(loc="upper left")
-plt.xlabel("Cycles")
-plt.ylabel("Memory usage")
-plt.savefig("img/mem.svg")
+# remove old parameters
+collection.remove()
 
-plt.show()
+collection.insert_many([
+    {
+        'name': 'Y_test',
+        'val': Y_test.tolist()
+    },
+    {
+        'name': 'y_pred',
+        'val': y_pred.tolist()
+    },
+    {
+        'name': 'epochs',
+        'val': epochs.tolist()
+    },
+    {
+        'name': 'mses',
+        'val': mses.tolist()
+    },
+    {
+        'name': 'cpus',
+        'val': cpus.tolist()
+    },
+    {
+        'name': 'mems',
+        'val': mems.tolist()
+    },
+])
+
+print("data saved")
