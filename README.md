@@ -2,13 +2,13 @@
 
 This is version 2.0. For previous version, please see [v-1.0](https://github.com/ysmiles/BitcoinPricePredict/tree/v-1.0).
 
-## Content table
+<!-- # Content table
 
 1. [New contents](#New-contents)
 2. [Introduction](#Introduction)
 3. [Implementation](#Implementation)
 4. [Output](#Output)
-5. [Discusstion and summary](#Discusstion-and-summary)
+5. [Discusstion and summary](#Discusstion-and-summary) -->
 
 ## New contents
 
