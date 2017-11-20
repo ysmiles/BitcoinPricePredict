@@ -2,6 +2,8 @@
 
 This is version 2.0. For previous version, please see [v-1.0](https://github.com/ysmiles/BitcoinPricePredict/tree/v-1.0).
 
+[Word version report](https://drive.google.com/file/d/1pZwjmzd85RFg-JexdZTeioKj7AY-lL_4/view?usp=sharing).
+
 <!-- # Content table
 
 1. [New contents](#New-contents)
