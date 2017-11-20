@@ -8,7 +8,7 @@ from pymongo import MongoClient
 
 # database client
 client = MongoClient()
-# will saved processed data into this database
+# will fetch data from this collection
 collection = client.bitcoin_predict.parameters
 
 # Fetch data
